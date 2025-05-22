@@ -1,1 +1,199 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TeX Formula Render</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #e2e2e2, #ffffff);
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 960px;
+      margin: 20px auto;
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: 500;
+      color: #333;
+    }
+    .symbol-picker {
+      margin-bottom: 20px;
+    }
+    .group {
+      margin-bottom: 20px;
+    }
+    .group h4 {
+      font-size: 1.1em;
+      margin-bottom: 8px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 4px;
+      color: #555;
+    }
+    .symbol-button {
+      margin: 4px;
+      padding: 8px 12px;
+      font-size: 15px;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+      background-color: #007acc;
+      color: #fff;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    .symbol-button:hover {
+      background-color: #005f99;
+      transform: scale(1.03);
+    }
+    .symbol-button small {
+      display: block;
+      font-size: 10px;
+      opacity: 0.8;
+    }
+    textarea {
+      width: 100%;
+      height: 70px;
+      font-size: 16px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      resize: vertical;
+      margin-bottom: 20px;
+    }
+    .color-picker {
+      margin-bottom: 20px;
+    }
+    .color-picker label {
+      font-weight: 500;
+      margin-right: 10px;
+    }
+    .color-picker input[type="color"] {
+      margin-right: 20px;
+      cursor: pointer;
+    }
+    #preview {
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 25px;
+      min-height: 80px;
+      text-align: center;
+      font-size: 24px;
+      background-color: #ffffff;
+      transition: background-color 0.3s, color 0.3s;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>TeX Formula Render</h2>
+    <div class="symbol-picker">
+      <div class="group">
+        <h4>Basic Operators &amp; Relations</h4>
+        <button type="button" class="symbol-button" onclick="insertSymbol('.')"><span>.</span><small>(.)</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\times')"><span>×</span><small>(\\times)</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\circ')"><span>∘</span><small>(\\circ)</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('*')"><span>*</span><small>(*)</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\div')"><span>÷</span><small>(\\div)</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\pm')"><span>±</span><small>(\\pm)</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\infty')"><span>∞</span><small>(\\infty)</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\sim')"><span>∼</span><small>(\\sim)</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\cong')"><span>≅</span><small>(\\cong)</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\approx')"><span>≈</span><small>(\\approx)</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\neq')"><span>≠</span><small>(\\neq)</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('<')"><span>&lt;</span><small>(<)</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\langle')"><span>⟨</span><small>(\\langle)</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\rangle')"><span>⟩</span><small>(\\rangle)</small></button>
+      </div>
+      <div class="group">
+        <h4>Grouping Symbols</h4>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\left| a \\right|')"><span>|a|</span><small>(\\left| a \\right|)</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('(a)')"><span>(a)</span><small>((a))</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('[a]')"><span>[a]</span><small>([a])</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\{a\\}')"><span>{a}</span><small>(\\{a\\})</small></button>
+      </div>
+      <div class="group">
+        <h4>Exponents, Subscripts &amp; Diacritics</h4>
+        <button type="button" class="symbol-button" onclick="insertSymbol('x^{n}')"><span>xⁿ</span><small>(x^{n})</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('x_{i}')"><span>xᵢ</span><small>(x_{i})</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('x^{n}_{i}')"><span>xⁿᵢ</span><small>(x^{n}_{i})</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('f_{tex}')"><span>fₜₑₓ</span><small>(f_{tex})</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\overline{x}')"><span>x̅</span><small>(\\overline{x})</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\dot{x}')"><span>ẋ</span><small>(\\dot{x})</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\ddot{x}')"><span>ẍ</span><small>(\\ddot{x})</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('x^{\\prime}')"><span>x′</span><small>(x^{\\prime})</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\bar{x}')"><span>x̄</span><small>(\\bar{x})</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\tilde{x}')"><span>x̃</span><small>(\\tilde{x})</small></button>
+      </div>
+      <div class="group">
+        <h4>Arrows &amp; Fractions</h4>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\rightarrow\\; abc')"><span>→ abc</span><small>(\\rightarrow abc)</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\overline{abc}')"><span>abc̅</span><small>(\\overline{abc})</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\dfrac{x}{y}')"><span>⅟</span><small>(\\dfrac{x}{y})</small></button>
+      </div>
+      <div class="group">
+        <h4>Radicals</h4>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\sqrt{x}')"><span>√x</span><small>(\\sqrt{x})</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\sqrt[n]{x}')"><span>ⁿ√x</span><small>(\\sqrt[n]{x})</small></button>
+      </div>
+      <div class="group">
+        <h4>Operators with Limits</h4>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\sum_{n=1}^{\\infty}')"><span>&Sigma;<sub>n=1</sub><sup>&infty;</sup></span><small>(\\sum_{n=1}^{\\infty})</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\prod_{n=1}^{\\infty}')"><span>&Pi;<sub>n=1</sub><sup>&infty;</sup></span><small>(\\prod_{n=1}^{\\infty})</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\int_{0}^{2\\pi}')"><span>∫₀²π</span><small>(\\int_{0}^{2\\pi})</small></button>
+        <button type="button" class="symbol-button" onclick="insertSymbol('\\oint')"><span>∮</span><small>(\\oint)</small></button>
+      </div>
+    </div>
+    <div>
+      <label for="texInput" style="font-weight: 500;">Edit Your TeX Equation:</label>
+      <textarea id="texInput" placeholder="Enter TeX code here"></textarea>
+    </div>
+    <div class="color-picker">
+      <label for="bgColor">Background Color:</label>
+      <input type="color" id="bgColor" value="#ffffff">
+      <label for="textColor">Text Color:</label>
+      <input type="color" id="textColor" value="#000000">
+    </div>
+    <div id="preview"></div>
+  </div>
+  <script>
+    function insertSymbol(symbol) {
+      const textarea = document.getElementById("texInput");
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const text = textarea.value;
+      const before = text.substring(0, start);
+      const after = text.substring(end);
+      textarea.value = before + symbol + after;
+      textarea.selectionStart = textarea.selectionEnd = start + symbol.length;
+      textarea.focus();
+      updatePreview();
+    }
+    function updatePreview() {
+      const tex = document.getElementById("texInput").value;
+      const preview = document.getElementById("preview");
+      const bgColor = document.getElementById("bgColor").value;
+      const textColor = document.getElementById("textColor").value;
+      preview.style.backgroundColor = bgColor;
+      preview.style.color = textColor;
+      preview.innerHTML = '$$' + tex + '$$';
+      MathJax.typesetPromise([preview]).catch(function(err) {
+        preview.innerHTML = '<span style="color:red;">Error rendering TeX: ' + err.message + '</span>';
+      });
+    }
+    document.getElementById("texInput").addEventListener("input", updatePreview);
+    document.getElementById("bgColor").addEventListener("input", updatePreview);
+    document.getElementById("textColor").addEventListener("input", updatePreview);
+    updatePreview();
+  </script>
+</body>
+</html>
